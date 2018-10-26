@@ -3,15 +3,9 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>9</version>
-    </parent>
-
     <groupId>com.rometools</groupId>
     <artifactId>rome-parent</artifactId>
-    <version>1.6.0-SNAPSHOT</version>
+    <version>1.11.2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -21,6 +15,7 @@
         <module>rome-fetcher</module>
         <module>rome-modules</module>
         <module>rome-opml</module>
+        <module>rome-osgi-test</module>
         <module>rome-propono</module>
         <module>rome-utils</module>
     </modules>
@@ -29,7 +24,7 @@
 
     <description>Parent for all ROME projects</description>
 
-    <url>http://rometools.github.io/rome-parent/</url>
+    <url>http://rometools.com</url>
 
     <licenses>
         <license>
@@ -40,19 +35,26 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:ssh://github.com/rometools/rome-parent.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/rometools/rome-parent.git</developerConnection>
-        <url>https://github.com/rometools/rome-parent</url>
+        <connection>scm:git:https://github.com/rometools/rome.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/rometools/rome.git</developerConnection>
+        <url>https://github.com/rometools/rome</url>
     </scm>
 
     <developers>
         <developer>
             <name>Patrick Gotthard</name>
-            <email>patrick@patrick-gotthard.de</email>
-            <url>http://www.patrick-gotthard.de</url>
-            <timezone>+1</timezone>
+            <roles>
+                <role>Project lead</role>
+            </roles>
         </developer>
     </developers>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -65,7 +67,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.5.1</version>
+                    <version>3.7.0</version>
                     <configuration>
                         <source>1.6</source>
                         <target>1.6</target>
@@ -73,13 +75,13 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-site-plugin</artifactId>
-                    <version>3.3</version>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>3.0.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-project-info-reports-plugin</artifactId>
-                    <version>2.8.1</version>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.0.2</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -91,38 +93,21 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-scm-plugin</artifactId>
+                    <version>1.9.5</version>
+                    <configuration>
+                        <connectionType>developerConnection</connectionType>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-scm-publish-plugin</artifactId>
                     <version>1.1</version>
-                </plugin>
-                <!-- The following plugin doesn't modify the build. It is only used to hide irrelevant warnings in Eclipse -->
-                <plugin>
-                    <groupId>org.eclipse.m2e</groupId>
-                    <artifactId>lifecycle-mapping</artifactId>
-                    <version>1.0.0</version>
-                    <configuration>
-                        <lifecycleMappingMetadata>
-                            <pluginExecutions>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>org.apache.maven.plugins</groupId>
-                                        <artifactId>maven-enforcer-plugin</artifactId>
-                                        <versionRange>[1.0.0,)</versionRange>
-                                        <goals>
-                                            <goal>enforce</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore />
-                                    </action>
-                                </pluginExecution>
-                            </pluginExecutions>
-                        </lifecycleMappingMetadata>
-                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-bundle-plugin</artifactId>
-                    <version>3.0.1</version>
+                    <version>3.3.0</version>
                     <executions>
                         <execution>
                             <id>bundle</id>
@@ -133,47 +118,88 @@
                         </execution>
                     </executions>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>2.20</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>integration-test</goal>
+                                <goal>verify</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
         </pluginManagement>
-    </build>
-
-    <reporting>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-project-info-reports-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.8</version>
+                <extensions>true</extensions>
                 <configuration>
-                    <instructions>
-                        <Export-Package>
-                            com.rometools.rome.feed,
-                            com.rometools.rome.feed.atom,
-                            com.rometools.rome.feed.impl,
-                            com.rometools.rome.feed.module,
-                            com.rometools.rome.feed.rss,
-                            com.rometools.rome.feed.synd,
-                            com.rometools.rome.io,
-                        </Export-Package>
-                        <Import-Package>
-                            org.jdom2,
-                            org.jdom2.filter,
-                            org.jdom2.input,
-                            org.jdom2.input.sax,
-                            org.jdom2.output,
-                            org.slf4j,
-                            org.w3c.dom,
-                            org.xml.sax
-                        </Import-Package>
-                        <_exportcontents>com.rometools.utils</_exportcontents>
-                        <Embed-Dependency>rome-utils</Embed-Dependency>
-                    </instructions>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
                 </configuration>
             </plugin>
         </plugins>
-    </reporting>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>3.0.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.10.4</version>
+                        <configuration>
+                            <additionalparam>-Xdoclint:none</additionalparam>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <dependencyManagement>
         <dependencies>
@@ -181,42 +207,42 @@
             <dependency>
                 <groupId>com.rometools</groupId>
                 <artifactId>rome</artifactId>
-                <version>1.6.0-SNAPSHOT</version>
+                <version>1.11.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.rometools</groupId>
                 <artifactId>rome-certiorem</artifactId>
-                <version>1.6.0-SNAPSHOT</version>
+                <version>1.11.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.rometools</groupId>
                 <artifactId>rome-certiorem-webapp</artifactId>
-                <version>1.6.0-SNAPSHOT</version>
+                <version>1.11.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.rometools</groupId>
                 <artifactId>rome-fetcher</artifactId>
-                <version>1.6.0-SNAPSHOT</version>
+                <version>1.11.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.rometools</groupId>
                 <artifactId>rome-modules</artifactId>
-                <version>1.6.0-SNAPSHOT</version>
+                <version>1.11.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.rometools</groupId>
                 <artifactId>rome-opml</artifactId>
-                <version>1.6.0-SNAPSHOT</version>
+                <version>1.11.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.rometools</groupId>
                 <artifactId>rome-propono</artifactId>
-                <version>1.6.0-SNAPSHOT</version>
+                <version>1.11.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.rometools</groupId>
                 <artifactId>rome-utils</artifactId>
-                <version>1.6.0-SNAPSHOT</version>
+                <version>1.11.2-SNAPSHOT</version>
             </dependency>
             <!-- JDOM -->
             <dependency>
@@ -240,6 +266,12 @@
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>4.12</version>
+            </dependency>
+            <!-- XMLUnit -->
+            <dependency>
+                <groupId>xmlunit</groupId>
+                <artifactId>xmlunit</artifactId>
+                <version>1.6</version>
             </dependency>
             <!-- Hamcrest -->
             <dependency>
@@ -302,6 +334,11 @@
                 <groupId>net.oauth.core</groupId>
                 <artifactId>oauth</artifactId>
                 <version>20100527</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.tomakehurst</groupId>
+                <artifactId>wiremock</artifactId>
+                <version>1.58</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -1,29 +1,5 @@
 /*
- * EntryInformation.java
- *
- * Created on August 1, 2005, 7:37 PM
- *
- * This library is provided under dual licenses.
- * You may choose the terms of the Lesser General Public License or the Apache
- * License at your discretion.
- *
- *  Copyright (C) 2005  Robert Cooper, Temple of the Screaming Penguin
- *
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * Copyright 2005 Robert Cooper, Temple of the Screaming Penguin
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,25 +16,20 @@
  */
 package com.rometools.modules.itunes;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import com.rometools.modules.itunes.types.Duration;
+import com.rometools.rome.feed.CopyFrom;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.rometools.modules.itunes.types.Duration;
-import com.rometools.rome.feed.CopyFrom;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * This class contains information for iTunes podcast feeds that exist at the Item level.
- *
- * @version $Revision: 1.2 $
- * @author <a href="mailto:cooper@screaming-penguin.com">Robert "kebernet" Cooper</a>
  */
 public class EntryInformationImpl extends AbstractITunesObject implements EntryInformation {
-    /**
-     *
-     */
+
     private static final long serialVersionUID = 1L;
 
     private static final Logger LOG = LoggerFactory.getLogger(EntryInformationImpl.class);
@@ -66,10 +37,11 @@ public class EntryInformationImpl extends AbstractITunesObject implements EntryI
     private Duration duration;
     private ClosedCaptioned closedCaptioned;
     private Integer order;
+    private String episodeType;
+    private Integer season;
+    private Integer episode;
+    private String title;
 
-    /**
-     * Creates a new instance of EntryInformationImpl
-     */
     public EntryInformationImpl() {
     }
 
@@ -114,6 +86,44 @@ public class EntryInformationImpl extends AbstractITunesObject implements EntryI
     }
 
     /**
+     * Get the episode type
+     *
+     * @see #setEpisodeType(String) setEpisodeType(episodeType) for details
+     */
+    @Override
+    public String getEpisodeType() { return episodeType; }
+
+    /**
+     * Set the episode type to one of full (default), trailer or bonus. See see the <a href="http://podcasts.apple.com/resources/spec/ApplePodcastsSpecUpdatesiOS11.pdf">new spec by Apple</a> for details.
+     *
+     * @param episodeType
+     */
+    @Override
+    public void setEpisodeType(String episodeType) { this.episodeType = episodeType; }
+
+    @Override
+    public Integer getSeason() { return season; }
+
+    @Override
+    public void setSeason(Integer season) { this.season = season; }
+
+    @Override
+    public Integer getEpisode() { return episode; }
+
+    @Override
+    public void setEpisode(Integer episode) { this.episode = episode; }
+
+    @Override
+    public String getTitle() {
+        return title;
+    }
+
+    @Override
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    /**
      * Defined by the ROME module API
      * 
      * @param obj Object to copy from
@@ -146,6 +156,10 @@ public class EntryInformationImpl extends AbstractITunesObject implements EntryI
         setSummary(info.getSummary());
         setClosedCaptioned(info.getClosedCaptioned());
         setOrder(info.getOrder());
+        setEpisodeType(info.getEpisodeType());
+        setSeason(info.getSeason());
+        setEpisode(info.getEpisode());
+        setTitle(info.getTitle());
     }
 
     /**
@@ -163,15 +177,25 @@ public class EntryInformationImpl extends AbstractITunesObject implements EntryI
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("EntryInformationImpl [duration=");
-        builder.append(duration);
-        builder.append(", closedCaptioned=");
-        builder.append(closedCaptioned);
-        builder.append(", order=");
-        builder.append(order);
-        builder.append("]");
-        return builder.toString();
+        final StringBuffer sb = new StringBuffer("[");
+        sb.append(" duration: ");
+        sb.append(getDuration());
+        sb.append(" closedCaptioned: ");
+        sb.append(getClosedCaptioned());
+        sb.append(" order: ");
+        sb.append(getOrder());
+        sb.append(" season: ");
+        sb.append(getSeason());
+        sb.append(" episode: ");
+        sb.append(getEpisode());
+        sb.append(" title: ");
+        sb.append(getTitle());
+        sb.append(" episodeType: ");
+        sb.append(getEpisodeType());
+        sb.append("]");
+        sb.append(super.toString());
+
+        return sb.toString();
     }
 
 }

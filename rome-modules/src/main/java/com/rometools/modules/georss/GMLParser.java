@@ -35,10 +35,6 @@ import com.rometools.utils.Strings;
 
 /**
  * GMLParser is a parser for the GML georss format.
- *
- * @author Marc Wick
- * @version $Id: GMLParser.java,v 1.2 2007/06/05 20:44:53 marcwick Exp $
- *
  */
 public class GMLParser implements ModuleParser {
 
@@ -55,10 +51,14 @@ public class GMLParser implements ModuleParser {
 
     private static PositionList parsePosList(final Element element) {
         final String coordinates = element.getText();
-        final String[] coord = Strings.trimToEmpty(coordinates).split(" ");
+        final String[] coord = Strings.trimToEmpty(coordinates).split("\\s+");
         final PositionList posList = new PositionList();
         for (int i = 0; i < coord.length; i += 2) {
-            posList.add(Double.parseDouble(coord[i]), Double.parseDouble(coord[i + 1]));
+        	try {
+        		posList.add(Double.parseDouble(coord[i]), Double.parseDouble(coord[i + 1]));
+        	} catch (final NumberFormatException e) {
+        		return null;
+        	}
         }
         return posList;
     }
@@ -75,15 +75,24 @@ public class GMLParser implements ModuleParser {
             if (posElement != null) {
                 geoRSSModule = new GMLModuleImpl();
                 final String coordinates = posElement.getText();
-                final String[] coord = Strings.trimToEmpty(coordinates).split(" ");
-                final Position pos = new Position(Double.parseDouble(coord[0]), Double.parseDouble(coord[1]));
+                final String[] coord = Strings.trimToEmpty(coordinates).split("\\s+");
+                final Position pos;
+                try {
+                	pos = new Position(Double.parseDouble(coord[0]), Double.parseDouble(coord[1]));
+                } catch (final NumberFormatException e) {
+                	return null;
+                }
                 geoRSSModule.setGeometry(new Point(pos));
             }
         } else if (lineStringElement != null) {
             final Element posListElement = lineStringElement.getChild("posList", GeoRSSModule.GML_NS);
             if (posListElement != null) {
                 geoRSSModule = new GMLModuleImpl();
-                geoRSSModule.setGeometry(new LineString(parsePosList(posListElement)));
+                PositionList positionList = parsePosList(posListElement);
+                if (positionList == null) {
+                	return null;
+                }
+                geoRSSModule.setGeometry(new LineString(positionList));
             }
         } else if (polygonElement != null) {
             Polygon poly = null;
@@ -98,7 +107,12 @@ public class GMLParser implements ModuleParser {
                         if (poly == null) {
                             poly = new Polygon();
                         }
-                        poly.setExterior(new LinearRing(parsePosList(posListElement)));
+
+                        PositionList positionList = parsePosList(posListElement);
+                        if (positionList == null) {
+                        	return null;
+                        }
+                        poly.setExterior(new LinearRing(positionList));
                     }
                 }
             }
@@ -116,7 +130,12 @@ public class GMLParser implements ModuleParser {
                             if (poly == null) {
                                 poly = new Polygon();
                             }
-                            poly.getInterior().add(new LinearRing(parsePosList(posListElement)));
+
+                            PositionList positionList = parsePosList(posListElement);
+                            if (positionList == null) {
+                            	return null;
+                            }
+                            poly.getInterior().add(new LinearRing(positionList));
                         }
                     }
                 }
@@ -133,11 +152,16 @@ public class GMLParser implements ModuleParser {
             if (lowerElement != null && upperElement != null) {
                 geoRSSModule = new GMLModuleImpl();
                 final String lowerCoordinates = lowerElement.getText();
-                final String[] lowerCoord = Strings.trimToEmpty(lowerCoordinates).split(" ");
+                final String[] lowerCoord = Strings.trimToEmpty(lowerCoordinates).split("\\s+");
                 final String upperCoordinates = upperElement.getText();
-                final String[] upperCoord = Strings.trimToEmpty(upperCoordinates).split(" ");
-                final Envelope envelope = new Envelope(Double.parseDouble(lowerCoord[0]), Double.parseDouble(lowerCoord[1]), Double.parseDouble(upperCoord[0]),
-                        Double.parseDouble(upperCoord[1]));
+                final String[] upperCoord = Strings.trimToEmpty(upperCoordinates).split("\\s+");
+                final Envelope envelope;
+                try {
+                	envelope = new Envelope(Double.parseDouble(lowerCoord[0]), Double.parseDouble(lowerCoord[1]), Double.parseDouble(upperCoord[0]),
+                            Double.parseDouble(upperCoord[1]));
+                } catch (final NumberFormatException e) {
+                	return null;
+                }
                 geoRSSModule.setGeometry(envelope);
             }
         }

@@ -1,30 +1,5 @@
 /*
- * FeedInformation.java
- *
- * Created on August 1, 2005, 7:11 PM
- *
- *
- * This library is provided under dual licenses.
- * You may choose the terms of the Lesser General Public License or the Apache
- * License at your discretion.
- *
- *  Copyright (C) 2005  Robert Cooper, Temple of the Screaming Penguin
- *
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * Copyright 2005 Robert Cooper, Temple of the Screaming Penguin
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,9 +29,6 @@ import com.rometools.rome.feed.CopyFrom;
 
 /**
  * This class contains information for iTunes podcast feeds that exist at the Channel level.
- *
- * @version $Revision: 1.2 $
- * @author <a href="mailto:cooper@screaming-penguin.com">Robert "kebernet" Cooper</a>
  */
 public class FeedInformationImpl extends AbstractITunesObject implements FeedInformation {
 
@@ -69,10 +41,8 @@ public class FeedInformationImpl extends AbstractITunesObject implements FeedInf
     private List<Category> categories;
     private Boolean complete;
     private URL newFeedUrl;
+    private String type;
 
-    /**
-     * Creates a new instance of FeedInformationImpl
-     */
     public FeedInformationImpl() {
     }
 
@@ -157,6 +127,22 @@ public class FeedInformationImpl extends AbstractITunesObject implements FeedInf
     }
 
     /**
+     * Set the type of podcast to either Episodic (original type of podcasts) or Serial (should be consumed from oldest to newest)
+     * @see #getType() getType() for more details
+     * @param type  the type (Either 'serial' or 'episodic')
+     */
+    @Override
+    public void setType(final String type) { this.type = type; }
+
+    /**
+     * Return the type of podcast (either Episodic or Serial) as introduced in the new Apple Podcast spec for iOS 11.
+     * For more information see the <a href="http://podcasts.apple.com/resources/spec/ApplePodcastsSpecUpdatesiOS11.pdf">new spec by Apple</a>
+     * @return either 'episodic' (old school podcasts) or 'serial' (should be listened to from oldest to newest)
+     */
+    @Override
+    public String getType() { return type; }
+
+    /**
      * Required by the ROME API
      *
      * @param obj object to copy property values from
@@ -192,6 +178,7 @@ public class FeedInformationImpl extends AbstractITunesObject implements FeedInf
         setOwnerName(info.getOwnerName());
         setSubtitle(info.getSubtitle());
         setSummary(info.getSummary());
+        setType(info.getType());
     }
     
     /**
@@ -209,19 +196,23 @@ public class FeedInformationImpl extends AbstractITunesObject implements FeedInf
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("FeedInformationImpl [ownerName=");
-        builder.append(ownerName);
-        builder.append(", ownerEmailAddress=");
-        builder.append(ownerEmailAddress);
-        builder.append(", categories=");
-        builder.append(categories);
-        builder.append(", complete=");
-        builder.append(complete);
-        builder.append(", newFeedUrl=");
-        builder.append(newFeedUrl);
-        builder.append("]");
-        return builder.toString();
+        final StringBuffer sb = new StringBuffer("[");
+        sb.append(" email: ");
+        sb.append(getOwnerEmailAddress());
+        sb.append(" name: ");
+        sb.append(getOwnerName());
+        sb.append(" categories: ");
+        sb.append(getCategories());
+        sb.append(" complete: ");
+        sb.append(getComplete());
+        sb.append(" newFeedUrl: ");
+        sb.append(getNewFeedUrl());
+        sb.append(" type: ");
+        sb.append(getType());
+        sb.append("]");
+        sb.append(super.toString());
+
+        return sb.toString();
     }
     
 }

@@ -44,10 +44,6 @@ import com.rometools.utils.Strings;
 
 /**
  * Bean for entries of SyndFeedImpl feeds.
- * <p>
- *
- * @author Alejandro Abdelnur
- *
  */
 public class SyndEntryImpl implements Serializable, SyndEntry {
 
@@ -94,7 +90,6 @@ public class SyndEntryImpl implements Serializable, SyndEntry {
         IGNORE_PROPERTIES.add("author");
 
         final Map<String, Class<?>> basePropInterfaceMap = new HashMap<String, Class<?>>();
-        basePropInterfaceMap.put("uri", String.class);
         basePropInterfaceMap.put("title", String.class);
         basePropInterfaceMap.put("link", String.class);
         basePropInterfaceMap.put("uri", String.class);
@@ -129,11 +124,6 @@ public class SyndEntryImpl implements Serializable, SyndEntry {
         objBean = new ObjectBean(beanClass, this, convenienceProperties);
     }
 
-    /**
-     * Default constructor. All properties are set to <b>null</b>.
-     * <p>
-     *
-     */
     public SyndEntryImpl() {
         this(SyndEntry.class, IGNORE_PROPERTIES);
     }
@@ -564,15 +554,6 @@ public class SyndEntryImpl implements Serializable, SyndEntry {
         this.authors = authors;
     }
 
-    /**
-     * Returns the entry author.
-     * <p>
-     * This method is a convenience method, it maps to the Dublin Core module creator.
-     * <p>
-     *
-     * @return the entry author, <b>null</b> if none.
-     *
-     */
     @Override
     public String getAuthor() {
 

@@ -1,29 +1,5 @@
 /*
- * ITunesGenerator.java
- *
- * Created on August 1, 2005, 10:44 PM
- *
- * This library is provided under dual licenses.
- * You may choose the terms of the Lesser General Public License or the Apache
- * License at your discretion.
- *
- *  Copyright (C) 2005  Robert Cooper, Temple of the Screaming Penguin
- *
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * Copyright 2005 Robert Cooper, Temple of the Screaming Penguin
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,6 +16,7 @@
  */
 package com.rometools.modules.itunes.io;
 
+import com.rometools.modules.itunes.types.Subcategory;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -54,10 +31,6 @@ import com.rometools.modules.itunes.types.Category;
 import com.rometools.rome.feed.module.Module;
 import com.rometools.rome.io.ModuleGenerator;
 
-/**
- * @version $Revision: 1.3 $
- * @author <a href="mailto:cooper@screaming-penguin.com">Robert "kebernet" Cooper</a>
- */
 public class ITunesGenerator implements ModuleGenerator {
 
     private static final HashSet<Namespace> NAMESPACES = new HashSet<Namespace>();
@@ -67,7 +40,6 @@ public class ITunesGenerator implements ModuleGenerator {
         NAMESPACES.add(NAMESPACE);
     }
 
-    /** Creates a new instance of ITunesGenerator */
     public ITunesGenerator() {
     }
 
@@ -104,13 +76,17 @@ public class ITunesGenerator implements ModuleGenerator {
                 final Element category = generateSimpleElement("category", "");
                 category.setAttribute("text", cat.getName());
 
-                if (cat.getSubcategory() != null) {
+                for (Subcategory subcategory : cat.getSubcategories()) {
                     final Element subcat = generateSimpleElement("category", "");
-                    subcat.setAttribute("text", cat.getSubcategory().getName());
+                    subcat.setAttribute("text", subcategory.getName());
                     category.addContent(subcat);
                 }
 
                 element.addContent(category);
+            }
+
+            if (info.getType() != null) {
+                element.addContent(generateSimpleElement("type",info.getType()));
             }
 
             if (info.getComplete() != null) {
@@ -136,6 +112,18 @@ public class ITunesGenerator implements ModuleGenerator {
             }
             if (info.getOrder() != null) {
                 element.addContent(generateSimpleElement("order", info.getOrder().toString()));
+            }
+            if (info.getEpisodeType() != null) {
+                element.addContent(generateSimpleElement("episodeType", info.getEpisodeType()));
+            }
+            if (info.getSeason() != null && info.getSeason() > 0) {
+                element.addContent(generateSimpleElement("season", info.getSeason().toString()));
+            }
+            if (info.getEpisode() != null && info.getEpisode() > 0) {
+                element.addContent(generateSimpleElement("episode", info.getEpisode().toString()));
+            }
+            if (info.getTitle() != null) {
+                element.addContent(generateSimpleElement("title", info.getTitle()));
             }
         }
 

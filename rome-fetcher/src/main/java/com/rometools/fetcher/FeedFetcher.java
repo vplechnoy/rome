@@ -22,6 +22,11 @@ import java.net.URL;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
 
+/**
+ * @deprecated ROME Fetcher will be dropped in the next major version of ROME (version 2). For more information and some migration hints, 
+ * please have a look at our <a href="https://github.com/rometools/rome/issues/276">detailed explanation</a>.
+ */
+@Deprecated
 public interface FeedFetcher {
     /**
      * <p>
@@ -117,4 +122,15 @@ public interface FeedFetcher {
      * corresponding wireEntry property set.
      */
     void setPreserveWireFeed(boolean preserveWireFeed);
+    
+    /**
+     * In ROME 1.5.1 we fixed a security vulnerability by disallowing Doctype declarations by default. 
+     * This change breaks the compatibility with at least RSS 0.91N because it requires a Doctype declaration. 
+     * You are able to allow Doctype declarations again with this property. You should only activate it 
+     * when the feeds that you process are absolutely trustful. 
+     *  
+     * @param allowDoctypes true when Doctype declarations should be allowed again, false otherwise
+     */
+    void setAllowDoctypes(boolean allowDoctypes);
+
 }

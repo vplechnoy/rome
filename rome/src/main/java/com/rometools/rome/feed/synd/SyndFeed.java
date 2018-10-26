@@ -30,10 +30,6 @@ import com.rometools.rome.feed.module.Module;
  * Bean interface for all types of feeds.
  * <p>
  * It handles all RSS versions and Atom 0.3, it normalizes all info, it may lose information.
- * <p>
- *
- * @author Alejandro Abdelnur
- *
  */
 public interface SyndFeed extends Cloneable, CopyFrom, Extendable {
 
@@ -428,6 +424,24 @@ public interface SyndFeed extends Cloneable, CopyFrom, Extendable {
     void setImage(SyndImage image);
 
     /**
+     * Returns the feed icon.
+     * <p>
+     *
+     * @return the feed icon, <b>null</b> if none.
+     *
+     */
+    SyndImage getIcon();
+
+    /**
+     * Sets the feed icon.
+     * <p>
+     *
+     * @param icon the feed icon to set, <b>null</b> if none.
+     *
+     */
+    void setIcon(SyndImage icon);
+
+    /**
      * Returns the feed categories.
      * <p>
      * This method is a convenience method, it maps to the Dublin Core module subjects.
@@ -552,7 +566,7 @@ public interface SyndFeed extends Cloneable, CopyFrom, Extendable {
      * This tag should contain a URL that references a description of the channel.
      *
      * @since 2.0.0
-     * @param channel description URL
+     * @param docs description URL
      */
     public void setDocs(String docs);
 
@@ -568,7 +582,7 @@ public interface SyndFeed extends Cloneable, CopyFrom, Extendable {
      * A string indicating the program used to generate the channel.
      *
      * @since 2.0.0
-     * @param string indicating the program
+     * @param generator indicating the program
      */
     public void setGenerator(String generator);
 

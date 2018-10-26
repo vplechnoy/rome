@@ -1,35 +1,11 @@
 /*
- * Category.java
- *
- * Created on August 1, 2005, 7:24 PM
- *
- * This library is provided under dual licenses.
- * You may choose the terms of the Lesser General Public License or the Apache
- * License at your discretion.
- *
- *  Copyright (C) 2005  Robert Cooper, Temple of the Screaming Penguin
- *
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * Copyright 2005 Robert Cooper, Temple of the Screaming Penguin
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -40,24 +16,21 @@
  */
 package com.rometools.modules.itunes.types;
 
+import com.rometools.utils.Lists;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This Category information. Basically a name and an optional Subcategory. Categories are defined
  * by Apple. See ITMS for a view.
- *
- * @version $Revision: 1.2 $
- * @author <a href="mailto:cooper@screaming-penguin.com">Robert "kebernet" Cooper</a>
  */
 public class Category implements Serializable {
-    /**
-     *
-     */
+
     private static final long serialVersionUID = 1L;
     private String name;
-    private Subcategory subcategory;
+    private List<Subcategory> subcategories = new ArrayList<Subcategory>();
 
-    /** Creates a new instance of Category */
     public Category() {
     }
 
@@ -94,7 +67,16 @@ public class Category implements Serializable {
      * @return Returns the Subcategory object for this category
      */
     public Subcategory getSubcategory() {
-        return subcategory;
+        return subcategories.isEmpty() ? null : subcategories.get(0);
+    }
+
+    /**
+     * Returns the list of subcategories under this category
+     *
+     * @return List of subcategories
+     */
+    public List<Subcategory> getSubcategories() {
+        return subcategories;
     }
 
     /**
@@ -103,7 +85,15 @@ public class Category implements Serializable {
      * @param subcategory Sets the Subcategory object for this category
      */
     public void setSubcategory(final Subcategory subcategory) {
-        this.subcategory = subcategory;
+        subcategories = Lists.create(subcategory);
+    }
+
+    public void setSubcategories(final List<Subcategory> subcategories) {
+        this.subcategories = subcategories;
+    }
+
+    public void addSubcategory(final Subcategory subcategory) {
+        this.subcategories.add(subcategory);
     }
 
     /**
@@ -115,10 +105,7 @@ public class Category implements Serializable {
     public Object clone() {
         final Category c = new Category();
         c.setName(getName());
-
-        if (getSubcategory() != null) {
-            c.setSubcategory((Subcategory) getSubcategory().clone());
-        }
+        c.setSubcategories(getSubcategories());
 
         return c;
     }
@@ -127,8 +114,8 @@ public class Category implements Serializable {
     public String toString() {
         final StringBuffer sb = new StringBuffer(getName());
 
-        if (getSubcategory() != null) {
-            sb.append(" -> " + getSubcategory().toString());
+        for (Subcategory subcategory : getSubcategories()) {
+            sb.append(" -> " + subcategory.toString());
         }
 
         return sb.toString();

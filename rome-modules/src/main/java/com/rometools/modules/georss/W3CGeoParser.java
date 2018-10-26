@@ -28,10 +28,6 @@ import com.rometools.utils.Strings;
 
 /**
  * W3CGeoParser is a parser for the W3C geo format.
- *
- * @author Marc Wick
- * @version $Id: W3CGeoParser.java,v 1.4 2007/04/18 09:59:29 marcwick Exp $
- *
  */
 public class W3CGeoParser implements ModuleParser {
 
@@ -67,8 +63,13 @@ public class W3CGeoParser implements ModuleParser {
 
             if (latTxt != null && lngTxt != null) {
 
-                final double latitude = Double.parseDouble(lat.getText());
-                final double longitude = Double.parseDouble(lng.getText());
+                final double latitude, longitude;
+                try {
+                    latitude = Double.parseDouble(lat.getText());
+                    longitude = Double.parseDouble(lng.getText());
+                } catch (final NumberFormatException e) {
+                	return null;
+                }
 
                 final Position position = new Position(latitude, longitude);
 

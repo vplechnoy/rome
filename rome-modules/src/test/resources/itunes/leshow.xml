@@ -7,6 +7,10 @@
         <description>A weekly, hour-long romp through the worlds of media, politics, sports and show business, leavened with an eclectic mix of mysterious music, hosted by Harry Shearer.</description>
         <itunes:subtitle>An hour&#39;s worth of Harry Shearer</itunes:subtitle>
         <itunes:summary>A weekly, hour-long romp through the worlds of media, politics, sports and show business, leavened with an eclectic mix of mysterious music, hosted by Harry Shearer.</itunes:summary>
+        <itunes:type>serial</itunes:type>
+        <itunes:complete>yes</itunes:complete>
+        <itunes:new-feed-url>http://example.org</itunes:new-feed-url>
+        <itunes:block>Yes</itunes:block>
         <language>en</language>
         <copyright>KCRW 2005</copyright>
         <itunes:owner>
@@ -16,7 +20,9 @@
         <itunes:image rel="image" href="http://a1.phobos.apple.com/Music/y2005/m06/d26/h21/mcdrrifv.jpg">KCRW&#39;s Le Show</itunes:image>
         <category>Comedy</category>
         <itunes:category text="Comedy" />
-        <itunes:category text="Comedy" />
+        <itunes:category text="Arts &amp; Entertainment">
+            <itunes:category text="Entertainment" />
+        </itunes:category>
         <item>
             <title>le Show</title>
             <itunes:author>Harry Shearer</itunes:author>
@@ -32,6 +38,9 @@
             <itunes:explicit>no</itunes:explicit>
             <itunes:duration>46:34</itunes:duration>
             <itunes:keywords></itunes:keywords>
+            <itunes:season>1</itunes:season>
+            <itunes:episode>1</itunes:episode>
+            <itunes:episodeType>full</itunes:episodeType>
         </item>
         <item>
             <title>le Show</title>
@@ -51,6 +60,9 @@
             <itunes:explicit>no</itunes:explicit>
             <itunes:duration>44:00</itunes:duration>
             <itunes:keywords></itunes:keywords>
+            <itunes:season>1</itunes:season>
+            <itunes:episode>2</itunes:episode>
+            <itunes:episodeType>trailer</itunes:episodeType>
         </item>
         <item>
             <title>le Show</title>
@@ -70,6 +82,9 @@
             <itunes:explicit>no</itunes:explicit>
             <itunes:duration>48:33</itunes:duration>
             <itunes:keywords></itunes:keywords>
+            <itunes:season>1</itunes:season>
+            <itunes:episode>2</itunes:episode>
+            <itunes:episodeType>bonus</itunes:episodeType>
         </item>
         <item>
             <title>le Show</title>

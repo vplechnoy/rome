@@ -64,11 +64,15 @@ import com.rometools.utils.IO;
  * @see <a
  *      href="http://fishbowl.pastiche.org/2002/10/21/http_conditional_get_for_rss_hackers">http://fishbowl.pastiche.org/2002/10/21/http_conditional_get_for_rss_hackers</a>
  * @see <a
- *      href="http://diveintomark.org/archives/2003/07/21/atom_aggregator_behavior_http_level">http://diveintomark.org/archives/2003/07/21/atom_aggregator_behavior_http_level</a>
+ *      href="https://web.archive.org/web/20060712072932/http://diveintomark.org/archives/2003/07/21/atom_aggregator_behavior_http_level">http://diveintomark.org/archives/2003/07/21/atom_aggregator_behavior_http_level (Archived)</a>
  * @see <a
- *      href="http://bobwyman.pubsub.com/main/2004/09/using_rfc3229_w.html">http://bobwyman.pubsub.com/main/2004/09/using_rfc3229_w.html</a>
+ *      href="http://www.wyman.us/main/2004/09/using_rfc3229_w.html">http://www.wyman.us/main/2004/09/using_rfc3229_w.html</a>
  * @author Nick Lothian
+ * 
+ * @deprecated ROME Fetcher will be dropped in the next major version of ROME (version 2). For more information and some migration hints, 
+ * please have a look at our <a href="https://github.com/rometools/rome/issues/276">detailed explanation</a>.
  */
+@Deprecated
 public class HttpURLFeedFetcher extends AbstractFeedFetcher {
 
     private volatile int connectTimeout = -1;
@@ -280,11 +284,6 @@ public class HttpURLFeedFetcher extends AbstractFeedFetcher {
             is = new BufferedInputStream(inputStream);
         }
 
-        // InputStreamReader reader = new InputStreamReader(is,
-        // ResponseHandler.getCharacterEncoding(connection));
-
-        // SyndFeedInput input = new SyndFeedInput();
-
         final XmlReader reader;
         if (connection.getHeaderField("Content-Type") != null) {
             reader = new XmlReader(is, connection.getHeaderField("Content-Type"), true);
@@ -294,6 +293,7 @@ public class HttpURLFeedFetcher extends AbstractFeedFetcher {
 
         final SyndFeedInput syndFeedInput = new SyndFeedInput();
         syndFeedInput.setPreserveWireFeed(isPreserveWireFeed());
+        syndFeedInput.setAllowDoctypes(isAllowDoctypes());
 
         return syndFeedInput.build(reader);
 
