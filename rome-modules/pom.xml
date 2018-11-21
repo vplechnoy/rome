@@ -9,6 +9,7 @@
     </parent>
 
     <artifactId>rome-modules</artifactId>
+    <version>1.11.1.esri</version>
     <packaging>jar</packaging>
 
     <name>rome-modules</name>

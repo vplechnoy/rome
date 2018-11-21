@@ -227,7 +227,7 @@
             <dependency>
                 <groupId>com.rometools</groupId>
                 <artifactId>rome-modules</artifactId>
-                <version>1.11.1</version>
+                <version>1.11.1.esri</version>
             </dependency>
             <dependency>
                 <groupId>com.rometools</groupId>
